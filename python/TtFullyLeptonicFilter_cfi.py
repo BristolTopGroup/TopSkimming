@@ -1,37 +1,37 @@
 import FWCore.ParameterSet.Config as cms
 
-ttFullyLeptonicFilter = cms.EDFilter("TtDecayChannelFilter",
-    ## input source for decay channel selection
-    src = cms.InputTag("genParticles"),
-    ## invert the selection choice                                
-    invert = cms.bool(False),
+from TopQuarkAnalysis.TopSkimming.TtDecayChannelFilter_cfi import ttDecayChannelFilter
 
-    ## allow given lepton in corresponding decay
-    ## branch for a given decay channel selection;
-    ## all leptons to 'False' corresponds to the
-    ## full hadronic decay channel
-    allowedTopDecays = cms.PSet(
-      decayBranchA = cms.PSet(
-        electron = cms.bool(True),
-        muon     = cms.bool(True),
-        tau      = cms.bool(False)
-      ),
-      decayBranchB= cms.PSet(
-        electron = cms.bool(True),
-        muon     = cms.bool(True),
-        tau      = cms.bool(False)
-      )
-    ),
+## full-leptonic decay
+ttFullLeptonicFilter = ttDecayChannelFilter.clone()
+ttFullLeptonicFilter.allowedTopDecays.decayBranchA.electron = True
+ttFullLeptonicFilter.allowedTopDecays.decayBranchA.muon     = True
+ttFullLeptonicFilter.allowedTopDecays.decayBranchB.electron = True
+ttFullLeptonicFilter.allowedTopDecays.decayBranchB.muon     = True
+ttFullLeptonicFilter.allowedTopDecays.decayBranchA.tau      = True
+ttFullLeptonicFilter.allowedTopDecays.decayBranchB.tau      = True
 
-    ## add a restriction to the decay channel of taus
-    ## by redefining the following ParameterSet in
-    ## your cfg file; the following restrictions are
-    ## available:
-    restrictTauDecays = cms.PSet(
-    #  leptonic   = cms.bool(False),
-    #  oneProng   = cms.bool(False),
-    #  threeProng = cms.bool(False)
-    )
-)
+#more di-leptonic filters
+ttFullLeptonicEEFilter = ttDecayChannelFilter.clone()
+ttFullLeptonicEEFilter.allowedTopDecays.decayBranchA.electron = True
+ttFullLeptonicEEFilter.allowedTopDecays.decayBranchB.electron = True
 
+ttFullLeptonicMuMuFilter = ttDecayChannelFilter.clone()
+ttFullLeptonicMuMuFilter.allowedTopDecays.decayBranchA.muon = True
+ttFullLeptonicMuMuFilter.allowedTopDecays.decayBranchB.muon = True
 
+ttFullLeptonicTauTauFilter = ttDecayChannelFilter.clone()
+ttFullLeptonicTauTauFilter.allowedTopDecays.decayBranchA.tau = True
+ttFullLeptonicTauTauFilter.allowedTopDecays.decayBranchB.tau = True
+#mixed leptons
+ttFullLeptonicETauFilter = ttDecayChannelFilter.clone()
+ttFullLeptonicETauFilter.allowedTopDecays.decayBranchA.electron = True
+ttFullLeptonicETauFilter.allowedTopDecays.decayBranchB.tau = True
+
+ttFullLeptonicEMuFilter = ttDecayChannelFilter.clone()
+ttFullLeptonicEMuFilter.allowedTopDecays.decayBranchA.electron = True
+ttFullLeptonicEMuFilter.allowedTopDecays.decayBranchB.muon = True
+#more di-leptonic filters
+ttFullLeptonicMuTauFilter = ttDecayChannelFilter.clone()
+ttFullLeptonicMuTauFilter.allowedTopDecays.decayBranchA.muon = True
+ttFullLeptonicMuTauFilter.allowedTopDecays.decayBranchB.tau = True
