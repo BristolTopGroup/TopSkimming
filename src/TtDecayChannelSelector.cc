@@ -104,7 +104,7 @@ bool TtDecayChannelSelector::operator()(const reco::GenParticleCollection& parts
 			}
 		}
 	}
-	if (true) {
+	if (verbose) {
 		//edm::LogVerbatim log("TtDecayChannelSelector");
 		std::cout << "----------------------" << "\n";
 		std::cout << " iTop    : " << iTop << "\n";
