@@ -1,3 +1,10 @@
+#include "AnalysisDataFormats/TopObjects/interface/TtGenEvent.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EDFilter.h"
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+
 //
 // Package:    TopDecayChannelFilter
 // Class:      TopDecayChannelFilter
@@ -11,12 +18,6 @@
  Original Author:  Roger Wolf (rwolf@cern.ch)
  Modified:  Lukasz Kreczko, 24.09.2012
  */
-#include "AnalysisDataFormats/TopObjects/interface/TtGenEvent.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/EDFilter.h"
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 template<typename S>
 class TopDecayChannelFilter: public edm::EDFilter {
@@ -28,20 +29,24 @@ private:
 	virtual bool filter(edm::Event&, const edm::EventSetup&);
 
 	edm::InputTag src_;
+	edm::EDGetTokenT<TtGenEvent> genEvt_;
 	S sel_;
 	bool useTtGenEvent_;
 	bool useMCATNLO_;
+
 	const bool taggingMode_;
 };
+
 
 template<typename S>
 TopDecayChannelFilter<S>::TopDecayChannelFilter(const edm::ParameterSet& cfg) :
 		src_(cfg.template getParameter < edm::InputTag > ("src")), //
-		sel_(cfg), //
+  		genEvt_( mayConsume<TtGenEvent>( src_ ) ),
+  		sel_(cfg), //
 		useTtGenEvent_(cfg.getParameter<bool>("useTtGenEvent")), //
 		useMCATNLO_(cfg.getParameter<bool>("useMCATNLO")),
 		taggingMode_(cfg.getParameter<bool>("taggingMode")) {
-	 produces<bool>();
+	produces<bool>();
 }
 
 template<typename S>
@@ -55,16 +60,16 @@ bool TopDecayChannelFilter<S>::filter(edm::Event& iEvent, const edm::EventSetup&
 	bool filterDecision = true;
 
 	if (useTtGenEvent_) {
-		iEvent.getByLabel(src_, ttbarGenEvent);
+		iEvent.getByToken(genEvt_, ttbarGenEvent);
 		filterDecision = sel_(ttbarGenEvent->particles(), src_.label());
 	} 
 	else if(useMCATNLO_){
-		iEvent.getByLabel(src_, genParticles);
+		iEvent.getByToken(genEvt_, genParticles);
 		filterDecision = sel_(*genParticles, "MC@NLO");
 	}
 
 	else {
-		iEvent.getByLabel(src_, genParticles);
+		iEvent.getByToken(genEvt_, genParticles);
 		filterDecision = sel_(*genParticles, src_.label());
 	}
 
@@ -80,4 +85,3 @@ bool TopDecayChannelFilter<S>::filter(edm::Event& iEvent, const edm::EventSetup&
 //	desc.add < bool > ("taggingMode", false);
 //	descriptions.add("TopDecayChannelFilter", desc);
 //}
-
