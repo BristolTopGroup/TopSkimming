@@ -27,7 +27,6 @@ public:
 
 private:
 	virtual bool filter(edm::Event&, const edm::EventSetup&);
-
 	edm::InputTag src_;
 	edm::EDGetTokenT<TtGenEvent> genEvt_;
 	S sel_;
