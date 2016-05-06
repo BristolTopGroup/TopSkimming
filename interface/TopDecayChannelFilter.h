@@ -1,10 +1,3 @@
-#include "AnalysisDataFormats/TopObjects/interface/TtGenEvent.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/EDFilter.h"
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
-
 //
 // Package:    TopDecayChannelFilter
 // Class:      TopDecayChannelFilter
@@ -18,6 +11,13 @@
  Original Author:  Roger Wolf (rwolf@cern.ch)
  Modified:  Lukasz Kreczko, 24.09.2012
  */
+
+#include "AnalysisDataFormats/TopObjects/interface/TtGenEvent.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EDFilter.h"
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 template<typename S>
 class TopDecayChannelFilter: public edm::EDFilter {
